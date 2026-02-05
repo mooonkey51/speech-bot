@@ -35,7 +35,7 @@ class Back:
         print("Transcription started")
         model = whisper.load_model("base")
 
-        result = model.transcribe(f"/home/local/Documents/vscode/speech-bot/SpeechBot/audio/recording{self.speechno}.wav")
+        result = model.transcribe(f"/home/local/Documents/vscode/speech-bot/SpeechBot/audio/recording{self.speechno}.wav", language="en")
 
         self.gui.speechDisplay(result['text'])
         print('Transcription finished')
