@@ -1,0 +1,5 @@
+model = whisper.load_model("base")
+
+result = model.transcribe(r"/home/local/Documents/vscode/recording1.wav")
+
+print(result["text"])

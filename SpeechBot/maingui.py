@@ -1,11 +1,18 @@
 from tkinter import *
 from tkinter import ttk
+import threading
+import time
+from main import Back
+
 
 class Choose:
 
     def __init__(self, root, streak="invalid"):
         self.streak= streak
         self.root = root
+        self.rec = Back(self)
+        self.currframe = "frame"
+        
 
         root.title("Speech Bot")
         root.geometry("800x600")
@@ -49,9 +56,17 @@ class Choose:
             self.countdown -= 1
             self.mylabel.after(1000, self.timer)
         else:
+            time.sleep(0.1)
             if self.currframe == "prep":
                 self.prepFrame.destroy()
                 self.speechStart()
+            elif self.currframe == "start":
+                self.speechFrame.destroy()
+                self.Recording()
+                self.currframe = ""
+            else:
+                self.recordingFrame.destroy()
+                self.waiting()
             
 
     def speechStart(self):
@@ -61,9 +76,34 @@ class Choose:
         ttk.Label(self.speechFrame, text="Start", font=("Arial",30)).grid(column=2,row=1)
         self.mylabel = ttk.Label(self.speechFrame, text='')
         self.mylabel.grid(column=2,row=2)
-        self.countdown = 10
+        self.countdown = 5
         self.currframe = "start"
         self.timer()
+        
+    def Recording(self):
+        self.recordingFrame = ttk.Frame(self.root)
+        self.recordingFrame.grid(column=0,row=0)
+        ttk.Label(self.recordingFrame, text="Recording Started", font=("Arial",30)).grid(column=2,row=1)
+        self.countdown = 5
+        self.mylabel = ttk.Label(self.recordingFrame, text='')
+        self.mylabel.grid(column=2,row=2)
+        threading.Thread(target=self.rec.voiceRecording).start()
+        self.timer()
+        
+        
+    
+    def waiting(self):
+        self.waitingFrame = ttk.Frame(self.root)
+        self.waitingFrame.grid(column=0,row=0)
+        ttk.Label(self.waitingFrame, text="Transcribing Your Speech", font=("Arial",30)).grid(column=2,row=1)
+        time.sleep(5)
+        self.rec.transcribe()
+            
+    def speechDisplay(self,text):
+        self.waitingFrame.destroy()
+        self.speechFrame = ttk.Frame(self.root)
+        self.speechFrame.grid(column=0,row=0)
+        ttk.Label(self.speechFrame, text=text, font=("Arial",30)).grid(column=2,row=1)
 
 
 root = Tk()
