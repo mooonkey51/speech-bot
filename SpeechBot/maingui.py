@@ -69,7 +69,7 @@ class Choose:
                 self.currframe = ""
             else:
                 self.recordingFrame.destroy()
-                self.waiting() 
+                self.waiting(self.rec.transcribe) 
                 
             
 
@@ -94,16 +94,17 @@ class Choose:
         self.countdown = 5
         self.mylabel = ttk.Label(self.recordingFrame, text='')
         self.mylabel.grid(column=2,row=2)
+        threading.Thread(target=self.rec.voiceRecording).start()
         self.timer()
         
         
     
-    def waiting(self):
+    def waiting(self,functoCall):
         self.waitingFrame = ttk.Frame(self.root)
         self.waitingFrame.grid(column=0,row=0)
-        label = ttk.Label(self.waitingFrame, text="Transcribing Your Speech", font=("Arial",30))
+        label = ttk.Label(self.waitingFrame, text="Loading", font=("Arial",30))
         label.grid(column=2,row=2)
-        label.after(5000, self.rec.transcribe)
+        label.after(5000, functoCall)
         
             
     def speechDisplay(self,text):
@@ -113,6 +114,15 @@ class Choose:
         ttk.Label(self.speechFrame, text=text, font=("Arial",30), wraplength= 700).grid(column=2,row=1)
         
         ttk.Button(self.speechFrame,text = "Next").grid(column = 3, row = 3)
+        
+        
+    def analysisDisplay(self,text):
+        self.analysisFrame.destroy()
+        self.analysisFrame = ttk.Frame(self.root)
+        self.analysisFrameFrame.grid(column=0,row=0)
+        ttk.Label(self.analysisFrame, text=text, font=("Arial",30), wraplength= 700).grid(column=2,row=1)
+        
+        ttk.Button(self.analysisFrame,text = "Next").grid(column = 3, row = 3)
     
     
         

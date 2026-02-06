@@ -3,7 +3,7 @@ from scipy.io.wavfile import write
 import wavio as wv
 import whisper
 import json
-import time
+from llama_cpp import Llama
 
 class Back:
     def __init__(self,gui):
@@ -39,3 +39,28 @@ class Back:
 
         self.gui.speechDisplay(result['text'])
         print('Transcription finished')
+        
+        
+        
+    def analyseSpeech(self):
+        print("Analysis of the speech started!")
+        llm = Llama(
+            model_path="/home/youruser/models/llama-2-7b-chat.Q4_K_M.gguf",
+            n_ctx=4096,
+            n_threads=8   # set to number of CPU cores
+        )
+
+        prompt = """
+            Analyze the following speech:
+            1. Grammar mistakes
+            2. Fluency and articulation
+            3. Content quality
+            4. Suggestions for improvement
+
+            Speech:
+            I am very happy to speaking today about technology...
+            """
+
+        response = llm(prompt, max_tokens=500)
+        print(response["choices"][0]["text"])
+
