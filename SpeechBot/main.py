@@ -35,9 +35,9 @@ class Back:
         print("Transcription started")
         model = whisper.load_model("base")
 
-        result = model.transcribe(f"/home/local/Documents/vscode/speech-bot/SpeechBot/audio/recording{self.speechno}.wav", language="en")
-
-        self.gui.speechDisplay(result['text'])
+        self.transcription = model.transcribe(f"/home/local/Documents/vscode/speech-bot/SpeechBot/audio/recording{self.speechno}.wav", language="en")
+        
+        self.gui.speechDisplay(self.transcription['text'])
         print('Transcription finished')
         
         
@@ -45,12 +45,15 @@ class Back:
     def analyseSpeech(self):
         print("Analysis of the speech started!")
         llm = Llama(
-            model_path="/home/youruser/models/llama-2-7b-chat.Q4_K_M.gguf",
-            n_ctx=4096,
-            n_threads=8   # set to number of CPU cores
+            #model_path="/home/youruser/models/llama-2-7b-chat.Q4_K_M.gguf",
+            #model_path = "~/models/llama-2-7b-chat.Q4_K_M.bin",
+            model_path= "/home/local/Documents/vscode/llama-env/models/llama-2-7b.Q4_K_M.gguf",
+            #n_ctx=4096,
+            n_ctx=2048,
+            n_threads=8   
         )
 
-        prompt = """
+        prompt = f"""
             Analyze the following speech:
             1. Grammar mistakes
             2. Fluency and articulation
@@ -58,9 +61,10 @@ class Back:
             4. Suggestions for improvement
 
             Speech:
-            I am very happy to speaking today about technology...
+            {self.transcription["text"]}
             """
 
         response = llm(prompt, max_tokens=500)
         print(response["choices"][0]["text"])
+        self.gui.analysisDisplay(response["choices"][0]["text"])
 
