@@ -113,14 +113,15 @@ class Choose:
         self.speechFrame.grid(column=0,row=0)
         ttk.Label(self.speechFrame, text=text, font=("Arial",30), wraplength= 700).grid(column=2,row=1)
         
-        ttk.Button(self.speechFrame,text = "Next",command=self.rec.analyseSpeech).grid(column = 3, row = 3)
+        ttk.Button(self.speechFrame,text = "Next",command=self.waiting(self.rec.analyseSpeech)).grid(column = 3, row = 3)
         
         
     def analysisDisplay(self,text):
         self.speechFrame.destroy()
         self.analysisFrame = ttk.Frame(self.root)
         self.analysisFrame.grid(column=0,row=0)
-        ttk.Label(self.analysisFrame, text=text, font=("Arial",30), wraplength= 700).grid(column=2,row=1)
+        analysis_text = ttk.Label(self.analysisFrame, text=text, font=("Arial"), wrap=100)
+        analysis_text.grid(column=2,row=3)
         
         ttk.Button(self.analysisFrame,text = "Next").grid(column = 3, row = 3)
     
